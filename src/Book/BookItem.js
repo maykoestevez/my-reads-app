@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BookShelfList from './Commons'
-import { string } from 'prop-types';
-import { arrayOf } from 'prop-types';
+import { string } from 'prop-types'
+import { arrayOf } from 'prop-types'
 
 function BookItem(Props) {
     const bookShelfs = BookShelfList;

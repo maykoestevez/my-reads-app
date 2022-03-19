@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import * as BooksAPI from '../BooksAPI'
 import BookItem from './BookItem';
 import { Link } from 'react-router-dom';
@@ -33,7 +32,7 @@ class SearchBook extends Component {
         this.setState(() => ({ query: query }));
         this.searchBooks(query);
     }
-    
+
     setShelfByBookId = (books) => {
         BooksAPI.getAll().then((myBooks) => {
             books.forEach((book, index) => {
