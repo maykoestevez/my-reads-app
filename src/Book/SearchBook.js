@@ -1,50 +1,22 @@
 import React, { Component } from 'react'
-import * as BooksAPI from '../BooksAPI'
 import BookItem from './BookItem';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { string, array } from 'prop-types';
 
 class SearchBook extends Component {
-    state = {
-        query: '',
-        books: []
-    }
 
-    searchBooks = (query) => {
-        BooksAPI.search(query).then((books) => {
-            if (!books.items) {
-                this.setShelfByBookId(books)
-            }
-        });
-    }
-
-    moveBook = (book, shelf) => {
-        BooksAPI.update(book, shelf).then(() => {
-            const books = this.state.books;
-            const bookIndex = books.findIndex((b) => b.id === book.id);
-            books[bookIndex].shelf = shelf;
-            this.setState(() => ({
-                books: books
-            }))
-        });
-    }
 
     handleQuery = query => {
-        this.setState(() => ({ query: query }));
-        this.searchBooks(query);
+        if (query) {
+            this.props.searchBooks(query);
+        } else {
+            this.props.clearBooks();
+        }
     }
 
-    setShelfByBookId = (books) => {
-        BooksAPI.getAll().then((myBooks) => {
-            books.forEach((book, index) => {
-                const bookInMyBooks = myBooks.find((myBook) => myBook.id === book.id);
-                if (bookInMyBooks) {
-                    books[index].shelf = bookInMyBooks.shelf;
-                    this.setState(() => ({
-                        books: books
-                    }))
-                }
-            });
-        })
+    componentDidMount() {
+        this.props.clearBooks();
     }
 
     render() {
@@ -61,23 +33,36 @@ class SearchBook extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {this.state.books.length > 0 && (this.state.books.map((book) => (
+                        {this.props.books.length > 0 && (this.props.books.map((book) => (
 
                             <li key={book.id}>
                                 <BookItem
                                     book={book}
-                                    onMoveBook={this.moveBook}
+                                    onMoveBook={this.props.moveBook}
                                     shelf={book.shelf}
+                                    books={this.props.books}
                                 >
                                 </BookItem>
                             </li>
                         )))}
                     </ol>
-                </div>Í
+                </div>
             </div>
         )
     }
 
+}
+
+SearchBook.propTypes = {
+    books: PropTypes.arrayOf(PropTypes.shape({
+        id: string,
+        title: string,
+        authors: array
+    })),
+    refreshAllBooks: PropTypes.func.isRequired,
+    searchBooks: PropTypes.func.isRequired,
+    clearBooks: PropTypes.func.isRequired,
+    moveBook: PropTypes.func.isRequired
 }
 
 export default SearchBook;

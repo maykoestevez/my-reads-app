@@ -17,6 +17,7 @@ function BookShelf(Props) {
                                 book={book}
                                 onMoveBook={onMoveBook}
                                 shelf={shelf.id}
+                                books={books}
                             >
                             </BookItem>
                         </li>

@@ -1,41 +1,14 @@
 import React from 'react'
-import * as BooksAPI from '../BooksAPI'
 import BookShelf from './BookShelf'
 import { Link } from 'react-router-dom'
-import BookShelfList from './Commons'
+import PropTypes from 'prop-types'
+import { string } from 'prop-types';
+
 
 class Layout extends React.Component {
-  state = {
-    books: [],
-  }
-
-  bookShelfs = BookShelfList;
-
-  getAllBooks = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState(() => ({
-        books: books
-      }))
-    })
-  }
-
-  moveBook = (book, shelf) => {
-    BooksAPI.update(book, shelf).then(() => {
-      const books = this.state.books;
-      const bookIndex = books.findIndex((b) => b.id === book.id);
-      books[bookIndex].shelf = shelf;
-      this.setState(() => ({
-        books: books
-      }))
-    });
-  }
-
-  getBooksByShelf = shelf => {
-    return this.state.books.filter((b) => b.shelf === shelf);
-  }
 
   componentDidMount() {
-    this.getAllBooks();
+    this.props.getAllBooks();
   }
 
   render() {
@@ -45,11 +18,11 @@ class Layout extends React.Component {
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          {this.bookShelfs.map(shelf => (
+          {this.props.bookShelfs.map(shelf => (
             <BookShelf
               key={shelf.id}
-              onMoveBook={this.moveBook}
-              books={this.getBooksByShelf(shelf.id)}
+              onMoveBook={this.props.moveBook}
+              books={this.props.getBooksByShelf(shelf.id)}
               shelf={shelf}>
             </BookShelf>
           ))}
@@ -60,6 +33,12 @@ class Layout extends React.Component {
       </div>
     )
   }
+}
+
+Layout.propTypes = {
+  bookShelfs: PropTypes.arrayOf( PropTypes.shape({ id: string, description: string })),
+  moveBook: PropTypes.func.isRequired,
+  getBooksByShelf: PropTypes.func.isRequired
 }
 
 export default Layout

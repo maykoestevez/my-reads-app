@@ -13,14 +13,22 @@ function BookItem(Props) {
         }
     }
 
-    const { book, onMoveBook, shelf } = Props;
+   const getImage = () => {
+        if (book.imageLinks) {
+            return book.imageLinks.thumbnail;
+        }
+
+        return '';
+    }
+
+    const { book, onMoveBook, shelf, books } = Props;
     return (
         <div className="book">
             <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${getImage()})` }}></div>
                 <div className="book-shelf-changer">
                     <select
-                        onChange={(value) => onMoveBook(book, value.target.value)}
+                        onChange={(value) => onMoveBook(book, value.target.value, books)}
                         value={shelf ? shelf : 'none'} >
                         <option value="move" disabled>Move to...</option>
                         {
