@@ -9,7 +9,7 @@ function BookItem(Props) {
 
     const getAuthors = author => {
         if (author) {
-            return book.authors.map(a => `${a} `);
+            return book.authors.join();
         }
     }
 
